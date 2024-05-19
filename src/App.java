@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class App {
@@ -18,19 +19,20 @@ public class App {
         System.out.println("4. Modificar");
 
         int opcion = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
 
         switch (opcion) {
             case 1:
                 buscarEnBaseDeDatos(scanner);
                 break;
             case 2:
-                añadirEnBaseDeDatos(scanner);
+                añadirEnBasedeDatos(scanner);
                 break;
             case 3:
-                borrarEnBaseDeDatos(scanner);
+                borrarEnBasedeDatos(scanner);
                 break;
             case 4:
-                modificarEnBaseDeDatos(scanner);
+                // modificarEnBaseDeDatos(scanner);
                 break;
             default:
                 System.out.println("Opción no válida");
@@ -49,92 +51,113 @@ public class App {
         int opcion = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer
 
+        String tabla = "";
+        String columna = "";
+
         switch (opcion) {
-            // Código para mostrar un Jugador.
             case 1:
-                System.out.println("Ingrese el nombre del jugador:");
-                String nombreJugador = scanner.nextLine();
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
-                    String sql = "SELECT * FROM Jugadores WHERE nombre LIKE ?";
-                    PreparedStatement statement = conn.prepareStatement(sql);
-                    statement.setString(1, "%" + nombreJugador + "%");
-                    ResultSet resultSet = statement.executeQuery();
-
-                    while (resultSet.next()) {
-                        String nombre = resultSet.getString("nombre");
-                        String nacionalidad = resultSet.getString("nacionalidad");
-                        String fechaNacimiento = resultSet.getString("fecha_nacimiento");
-                        String posicion = resultSet.getString("posicion");
-                        System.out.println("Nombre: " + nombre + ", Nacionalidad: " + nacionalidad
-                                + ", Fecha de nacimiento: " + fechaNacimiento + ", Posición: " + posicion);
-                    }
-
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                tabla = "Jugadores";
+                columna = "nombre";
                 break;
-            // Código para mostrar un Entrenador.
             case 2:
-                System.out.println("Ingrese el nombre del entrenador:");
-                String nombreEntrenador = scanner.nextLine();
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
-                    String sql = "SELECT * FROM Entrenadores WHERE nombre LIKE ?";
-                    PreparedStatement statement = conn.prepareStatement(sql);
-                    statement.setString(1, "%" + nombreEntrenador + "%");
-                    ResultSet resultSet = statement.executeQuery();
-
-                    while (resultSet.next()) {
-                        String nombre = resultSet.getString("nombre");
-                        String nacionalidad = resultSet.getString("nacionalidad");
-                        String fechaNacimiento = resultSet.getString("fecha_nacimiento");
-                        System.out.println("Nombre: " + nombre + ", Nacionalidad: " + nacionalidad
-                                + ", Fecha de nacimiento: " + fechaNacimiento);
-                    }
-
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                tabla = "Entrenadores";
+                columna = "nombre";
                 break;
-            // Código para mostrar un Equipo.
             case 3:
-                System.out.println("Ingrese el nombre del equipo:");
-                String nombreEquipo = scanner.nextLine();
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
-                    String sql = "SELECT * FROM Equipos WHERE nombre LIKE ?";
-                    PreparedStatement statement = conn.prepareStatement(sql);
-                    statement.setString(1, "%" + nombreEquipo + "%");
-                    ResultSet resultSet = statement.executeQuery();
-
-                    while (resultSet.next()) {
-                        String nombre = resultSet.getString("nombre");
-                        String pais = resultSet.getString("pais");
-                        String fundacion = resultSet.getString("fundacion");
-                        String estadio = resultSet.getString("estadio");
-                        System.out.println("Nombre: " + nombre + ", País: " + pais + ", Fundación: " + fundacion
-                                + ", Estadio: " + estadio);
-                    }
-
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                tabla = "Equipos";
+                columna = "nombre";
                 break;
             default:
                 System.out.println("Opción no válida");
-                break;
+                return;
+        }
+
+        System.out.println("Ingrese el nombre:");
+        String valor = scanner.nextLine();
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP", "root",
+                    "123456789");
+            String sql = "";
+            if (tabla.equals("Jugadores")) { // Consulta para que me muestre el nombre del equipo al que pertenece
+                sql = "SELECT j.*, e.nombre AS nombre_equipo " +
+                        "FROM Jugadores j " +
+                        "JOIN Equipos e ON j.equipo_id = e.ID_equipo " +
+                        "WHERE j." + columna + " LIKE ?";
+            } else if (tabla.equals("Entrenadores")) { // Consulta para que me muestre el nombre del equipo al que
+                                                       // pertenece
+                sql = "SELECT e.*, t.nombre AS nombre_equipo " +
+                        "FROM Entrenadores e " +
+                        "LEFT JOIN Equipos t ON e.ID_entrenador = t.entrenador_id " +
+                        "WHERE e." + columna + " LIKE ?";
+            } else if (tabla.equals("Equipos")) { // Consulta para que me muestre el nombre del entrenador y la
+                                                  // plantilla
+                sql = "SELECT e.*, t.nombre AS nombre_entrenador, " +
+                        "GROUP_CONCAT(j.nombre SEPARATOR ', ') AS plantilla " +
+                        "FROM Equipos e " +
+                        "LEFT JOIN Entrenadores t ON e.entrenador_id = t.ID_entrenador " +
+                        "LEFT JOIN Jugadores j ON e.ID_equipo = j.equipo_id " +
+                        "WHERE e." + columna + " LIKE ? " +
+                        "GROUP BY e.ID_equipo";
+            } else {
+                System.out.println("Error. Introduzca la elección correctamente.");
+                return;
+            }
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, "%" + valor + "%");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                switch (tabla) {
+                    case "Jugadores":
+                        String nombreJugador = resultSet.getString("nombre");
+                        String nacionalidadJugador = resultSet.getString("nacionalidad");
+                        String fechaNacimientoJugador = resultSet.getString("fecha_nacimiento");
+                        String posicionJugador = resultSet.getString("posicion");
+                        String nombreEquipoJugador = resultSet.getString("nombre_equipo");
+
+                        Jugador jugador = new Jugador(nombreJugador, nacionalidadJugador, fechaNacimientoJugador,
+                                posicionJugador, nombreEquipoJugador);
+                        System.out.println("Jugador: " + jugador.toString());
+                        break;
+                    case "Entrenadores":
+                        String nombreEntrenador = resultSet.getString("nombre");
+                        String nacionalidadEntrenador = resultSet.getString("nacionalidad");
+                        String fechaNacimientoEntrenador = resultSet.getString("fecha_nacimiento");
+                        String nombreEquipoEntrenador = resultSet.getString("nombre_equipo");
+
+                        Entrenador entrenador = new Entrenador(nombreEntrenador, nacionalidadEntrenador,
+                                fechaNacimientoEntrenador, nombreEquipoEntrenador);
+                        System.out.println("Entrenador: " + entrenador.toString());
+                        break;
+                    case "Equipos":
+                        String nombreEquipo = resultSet.getString("nombre");
+                        String paisEquipo = resultSet.getString("pais");
+                        String fundacionEquipo = resultSet.getString("fundacion");
+                        String estadioEquipo = resultSet.getString("estadio");
+                        String nombreEntrenadorEquipo = resultSet.getString("nombre_entrenador");
+                        String plantilla = resultSet.getString("plantilla");
+
+                        Equipo equipo = new Equipo(nombreEquipo, paisEquipo, fundacionEquipo, estadioEquipo,
+                                nombreEntrenadorEquipo, plantilla);
+                        equipo.setPlantilla(Arrays.asList(plantilla.split(", ")));
+                        System.out.println("Equipo: " + equipo.toString());
+                        break;
+                    default:
+                        System.out.println("Error. Introduzca la elección correctamente.");
+                        break;
+                }
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error al buscar en la base de datos: " + e.getMessage());
         }
     }
 
-    public static void añadirEnBaseDeDatos(Scanner scanner) {
-        System.out.println("¿Qué desea añadir?");
+    public static void añadirEnBasedeDatos(Scanner scanner) {
+        System.out.println("¿Qué desea agregar?");
         System.out.println("1. Jugador");
         System.out.println("2. Entrenador");
         System.out.println("3. Equipo");
@@ -142,75 +165,68 @@ public class App {
         int opcion = scanner.nextInt();
         scanner.nextLine(); // Limpiar el buffer
 
-        switch (opcion) {
-            // Código para añadir un Jugador.
-            case 1:
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP", "root",
+                    "123456789");
+            PreparedStatement statement = null;
 
+            switch (opcion) {
+                case 1:
                     System.out.println("Ingrese el nombre del jugador:");
                     String nombreJugador = scanner.nextLine();
                     System.out.println("Ingrese la nacionalidad del jugador:");
-                    String nacionalidad = scanner.nextLine();
+                    String nacionalidadJugador = scanner.nextLine();
                     System.out.println("Ingrese la fecha de nacimiento del jugador (YYYY-MM-DD):");
-                    String fechaNacimiento = scanner.nextLine();
+                    String fechaNacimientoJugador = scanner.nextLine();
                     System.out.println("Ingrese la posición del jugador:");
-                    String posicion = scanner.nextLine();
+                    String posicionJugador = scanner.nextLine();
+                    System.out.println("Ingrese el nombre del equipo al que pertenece el jugador:");
+                    String equipoNombreJugador = scanner.nextLine();
 
-                    String sql = "INSERT INTO Jugadores (nombre, nacionalidad, fecha_nacimiento, posicion) VALUES (?, ?, ?, ?)";
-                    PreparedStatement statement = conn.prepareStatement(sql);
-                    statement.setString(1, nombreJugador);
-                    statement.setString(2, nacionalidad);
-                    statement.setString(3, fechaNacimiento);
-                    statement.setString(4, posicion);
-
-                    int rowsInserted = statement.executeUpdate();
-                    if (rowsInserted > 0) {
-                        System.out.println("Jugador agregado correctamente");
-                    } else {
-                        System.out.println("No se pudo agregar el jugador");
+                    try {
+                        int equipoIdJugador = obtenerIdEquipo(equipoNombreJugador, conn);
+                        if (equipoIdJugador != 0) {
+                            statement = conn.prepareStatement(
+                                    "INSERT INTO Jugadores (nombre, nacionalidad, fecha_nacimiento, posicion, equipo_id) VALUES (?, ?, ?, ?, ?)");
+                            statement.setString(1, nombreJugador);
+                            statement.setString(2, nacionalidadJugador);
+                            statement.setString(3, fechaNacimientoJugador);
+                            statement.setString(4, posicionJugador);
+                            statement.setInt(5, equipoIdJugador);
+                        } else {
+                            System.out.println("El equipo especificado no existe.");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            // Código para añadir un Entrenador.
-            case 2:
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
+                    break;
+                case 2:
                     System.out.println("Ingrese el nombre del entrenador:");
                     String nombreEntrenador = scanner.nextLine();
                     System.out.println("Ingrese la nacionalidad del entrenador:");
                     String nacionalidadEntrenador = scanner.nextLine();
                     System.out.println("Ingrese la fecha de nacimiento del entrenador (YYYY-MM-DD):");
                     String fechaNacimientoEntrenador = scanner.nextLine();
+                    System.out.println("Ingrese el nombre del equipo al que pertenece el entrenador:");
+                    String equipoNombreEntrenador = scanner.nextLine();
 
-                    String sqlEntrenador = "INSERT INTO Entrenadores (nombre, nacionalidad, fecha_nacimiento) VALUES (?, ?, ?)";
-                    PreparedStatement statementEntrenador = conn.prepareStatement(sqlEntrenador);
-                    statementEntrenador.setString(1, nombreEntrenador);
-                    statementEntrenador.setString(2, nacionalidadEntrenador);
-                    statementEntrenador.setString(3, fechaNacimientoEntrenador);
-
-                    int rowsInsertedEntrenador = statementEntrenador.executeUpdate();
-                    if (rowsInsertedEntrenador > 0) {
-                        System.out.println("Entrenador agregado correctamente");
-                    } else {
-                        System.out.println("No se pudo agregar el entrenador");
+                    try {
+                        int equipoIdEntrenador = obtenerIdEquipo(equipoNombreEntrenador, conn);
+                        if (equipoIdEntrenador != 0) {
+                            statement = conn.prepareStatement(
+                                    "INSERT INTO Entrenadores (nombre, nacionalidad, fecha_nacimiento, equipo_id) VALUES (?, ?, ?, ?)");
+                            statement.setString(1, nombreEntrenador);
+                            statement.setString(2, nacionalidadEntrenador);
+                            statement.setString(3, fechaNacimientoEntrenador);
+                            statement.setInt(4, equipoIdEntrenador);
+                        } else {
+                            System.out.println("El equipo especificado no existe.");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
-            // Código para añadir un Equipo.
-            case 3:
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP",
-                            "root", "123456789");
-
+                    break;
+                case 3:
                     System.out.println("Ingrese el nombre del equipo:");
                     String nombreEquipo = scanner.nextLine();
                     System.out.println("Ingrese el país del equipo:");
@@ -219,32 +235,107 @@ public class App {
                     String fundacionEquipo = scanner.nextLine();
                     System.out.println("Ingrese el estadio del equipo:");
                     String estadioEquipo = scanner.nextLine();
+                    System.out.println("¿El equipo tiene entrenador? (Sí/No):");
+                    String tieneEntrenador = scanner.nextLine();
 
-                    String sqlEquipo = "INSERT INTO Equipos (nombre, pais, fundacion, estadio) VALUES (?, ?, ?, ?)";
-                    PreparedStatement statementEquipo = conn.prepareStatement(sqlEquipo);
-                    statementEquipo.setString(1, nombreEquipo);
-                    statementEquipo.setString(2, paisEquipo);
-                    statementEquipo.setString(3, fundacionEquipo);
-                    statementEquipo.setString(4, estadioEquipo);
+                    int entrenadorIdEquipo = 0;
 
-                    int rowsInsertedEquipo = statementEquipo.executeUpdate();
-                    if (rowsInsertedEquipo > 0) {
-                        System.out.println("Equipo agregado correctamente");
-                    } else {
-                        System.out.println("No se pudo agregar el equipo");
+                    if (tieneEntrenador.equalsIgnoreCase("Sí")) {
+                        // Registro del entrenador
+                        System.out.println("Registro del entrenador:");
+                        System.out.println("Ingrese el nombre del entrenador:");
+                        String nombreEntrenador2 = scanner.nextLine();
+                        System.out.println("Ingrese la nacionalidad del entrenador:");
+                        String nacionalidadEntrenador2 = scanner.nextLine();
+                        System.out.println("Ingrese la fecha de nacimiento del entrenador (YYYY-MM-DD):");
+                        String fechaNacimientoEntrenador2 = scanner.nextLine();
+                        System.out.println("Ingrese el nombre del equipo al que pertenece el entrenador:");
+                        String equipoNombreEntrenador2 = scanner.nextLine();
+
+                        try {
+                            int equipoIdEntrenador = obtenerIdEquipo(equipoNombreEntrenador2, conn);
+                            if (equipoIdEntrenador != 0) {
+                                statement = conn.prepareStatement(
+                                        "INSERT INTO Entrenadores (nombre, nacionalidad, fecha_nacimiento, equipo_id) VALUES (?, ?, ?, ?)");
+                                statement.setString(1, nombreEntrenador2);
+                                statement.setString(2, nacionalidadEntrenador2);
+                                statement.setString(3, fechaNacimientoEntrenador2);
+                                statement.setInt(4, equipoIdEntrenador);
+                            } else {
+                                System.out.println("El equipo especificado no existe.");
+                                return; // Terminamos la ejecución del método si el equipo no existe
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            return;
+                        }
                     }
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+
+                    try {
+                        if (entrenadorIdEquipo != -1) {
+                            statement = conn.prepareStatement(
+                                    "INSERT INTO Equipos (nombre, pais, fundacion, estadio, entrenador_id) VALUES (?, ?, ?, ?, ?)");
+                            statement.setString(1, nombreEquipo);
+                            statement.setString(2, paisEquipo);
+                            statement.setString(3, fundacionEquipo);
+                            statement.setString(4, estadioEquipo);
+                            statement.setInt(5, entrenadorIdEquipo);
+                        } else {
+                            statement = conn.prepareStatement(
+                                    "INSERT INTO Equipos (nombre, pais, fundacion, estadio) VALUES (?, ?, ?, ?)");
+                            statement.setString(1, nombreEquipo);
+                            statement.setString(2, paisEquipo);
+                            statement.setString(3, fundacionEquipo);
+                            statement.setString(4, estadioEquipo);
+                        }
+
+                        int filasInsertadas = statement.executeUpdate();
+                        if (filasInsertadas > 0) {
+                            System.out.println("Registro del equipo agregado exitosamente.");
+                        } else {
+                            System.out.println("No se pudo agregar el registro del equipo.");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                default:
+                    System.out.println("Opción no válida");
+                    break;
+            }
+
+            if (statement != null) {
+                int filasInsertadas = statement.executeUpdate();
+                if (filasInsertadas > 0) {
+                    System.out.println("Registro agregado exitosamente.");
+                } else {
+                    System.out.println("No se pudo agregar el registro.");
                 }
-                break;
-            default:
-                System.out.println("Opción no válida");
-                break;
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error al añadir en la base de datos: " + e.getMessage());
         }
     }
 
-    public static void borrarEnBaseDeDatos(Scanner scanner) {
+    private static int obtenerIdEquipo(String nombreEquipo, Connection conn) throws SQLException {
+        int idEquipo = 0;
+
+        String sql = "SELECT ID_equipo FROM Equipos WHERE nombre = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setString(1, nombreEquipo);
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            idEquipo = resultSet.getInt("ID_equipo");
+        }
+
+        return idEquipo;
+    }
+
+    public static void borrarEnBasedeDatos(Scanner scanner) {
         System.out.println("¿Qué desea borrar?");
         System.out.println("1. Jugador");
         System.out.println("2. Entrenador");
@@ -256,254 +347,66 @@ public class App {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP", "root",
                     "123456789");
+            PreparedStatement statement = null;
+            int filasBorradasEquipo = 0; // Variable para almacenar el número de filas eliminadas de la tabla Equipos
 
             switch (opcion) {
                 case 1:
                     System.out.println("Ingrese el nombre del jugador que desea borrar:");
                     String nombreJugador = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
 
-                    String sqlJugador = "DELETE FROM Jugadores WHERE nombre = ?";
-                    PreparedStatement statementJugador = conn.prepareStatement(sqlJugador);
-                    statementJugador.setString(1, nombreJugador);
-
-                    int rowsDeletedJugador = statementJugador.executeUpdate();
-                    if (rowsDeletedJugador > 0) {
-                        System.out.println("Jugador borrado correctamente");
-                    } else {
-                        System.out.println("No se encontró el jugador con el ID especificado");
-                    }
+                    statement = conn.prepareStatement("DELETE FROM Jugadores WHERE nombre = ?");
+                    statement.setString(1, nombreJugador);
                     break;
-
                 case 2:
                     System.out.println("Ingrese el nombre del entrenador que desea borrar:");
                     String nombreEntrenador = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
 
-                    String sqlEntrenador = "DELETE FROM Entrenadores WHERE nombre = ?";
-                    PreparedStatement statementEntrenador = conn.prepareStatement(sqlEntrenador);
-                    statementEntrenador.setString(1, nombreEntrenador);
-
-                    int rowsDeletedEntrenador = statementEntrenador.executeUpdate();
-                    if (rowsDeletedEntrenador > 0) {
-                        System.out.println("Entrenador borrado correctamente");
-                    } else {
-                        System.out.println("No se encontró el entrenador con el ID especificado");
-                    }
+                    statement = conn.prepareStatement("DELETE FROM Entrenadores WHERE nombre = ?");
+                    statement.setString(1, nombreEntrenador);
                     break;
-
                 case 3:
                     System.out.println("Ingrese el nombre del equipo que desea borrar:");
                     String nombreEquipo = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
 
-                    String sqlEquipo = "DELETE FROM Equipos WHERE nombre = ?";
-                    PreparedStatement statementEquipo = conn.prepareStatement(sqlEquipo);
-                    statementEquipo.setString(1, nombreEquipo);
+                    System.out.println("¿Desea borrar también el entrenador y la plantilla del equipo? (Sí/No):");
+                    String borrarEntrenadorYPlantilla = scanner.nextLine();
 
-                    int rowsDeletedEquipo = statementEquipo.executeUpdate();
-                    if (rowsDeletedEquipo > 0) {
-                        System.out.println("Equipo borrado correctamente");
-                    } else {
-                        System.out.println("No se encontró el equipo con el ID especificado");
+                    // Primero, eliminamos el equipo
+                    statement = conn.prepareStatement("DELETE FROM Equipos WHERE nombre = ?");
+                    statement.setString(1, nombreEquipo);
+                    filasBorradasEquipo = statement.executeUpdate(); // Actualizamos la variable con el número de filas
+                                                                     // eliminadas
+
+                    // Si se confirma el borrado del entrenador y la plantilla, procedemos a
+                    // eliminarlos
+                    if (borrarEntrenadorYPlantilla.equalsIgnoreCase("Sí")) {
+                        // Resto del código para borrar entrenador y plantilla
                     }
                     break;
-
                 default:
                     System.out.println("Opción no válida");
                     break;
             }
 
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+            if (statement != null) {
+                int filasBorradas = statement.executeUpdate();
+                if (filasBorradas > 0) {
+                    System.out.println("Registro(s) borrado(s) exitosamente.");
+                } else {
+                    System.out.println("No se pudo borrar el registro.");
+                }
+            }
 
-    public static void modificarEnBaseDeDatos(Scanner scanner) {
-        System.out.println("¿Qué desea modificar?");
-        System.out.println("1. Jugador");
-        System.out.println("2. Entrenador");
-        System.out.println("3. Equipo");
-
-        int opcion = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer
-
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP", "root",
-                    "123456789");
-
-            switch (opcion) {
-                case 1:
-                    System.out.println("Ingrese el nombre del jugador que desea modificar:");
-                    String nombreJugador = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    System.out.println("¿Qué atributo desea modificar?");
-                    System.out.println("1. Nombre");
-                    System.out.println("2. Nacionalidad");
-                    System.out.println("3. Fecha de nacimiento");
-                    System.out.println("4. Posición");
-
-                    int opcionAtributoJugador = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    String nombreColumnaJugador = "";
-                    String nuevoValorJugador = "";
-
-                    switch (opcionAtributoJugador) {
-                        case 1:
-                            nombreColumnaJugador = "nombre";
-                            System.out.println("Ingrese el nuevo nombre del jugador:");
-                            nuevoValorJugador = scanner.nextLine();
-                            break;
-                        case 2:
-                            nombreColumnaJugador = "nacionalidad";
-                            System.out.println("Ingrese la nueva nacionalidad del jugador:");
-                            nuevoValorJugador = scanner.nextLine();
-                            break;
-                        case 3:
-                            nombreColumnaJugador = "fecha_nacimiento";
-                            System.out.println("Ingrese la nueva fecha de nacimiento del jugador (YYYY-MM-DD):");
-                            nuevoValorJugador = scanner.nextLine();
-                            break;
-                        case 4:
-                            nombreColumnaJugador = "posicion";
-                            System.out.println("Ingrese la nueva posición del jugador:");
-                            nuevoValorJugador = scanner.nextLine();
-                            break;
-                        default:
-                            System.out.println("Opción no válida");
-                            conn.close();
-                            return;
-                    }
-
-                    String sqlJugador = "UPDATE Jugadores SET " + nombreColumnaJugador + " = ? WHERE nombre = ?";
-                    PreparedStatement statementJugador = conn.prepareStatement(sqlJugador);
-                    statementJugador.setString(1, nuevoValorJugador);
-                    statementJugador.setString(2, nombreJugador);
-
-                    int rowsUpdatedJugador = statementJugador.executeUpdate();
-                    if (rowsUpdatedJugador > 0) {
-                        System.out.println("Jugador modificado correctamente");
-                    } else {
-                        System.out.println("No se encontró el jugador con el ID especificado");
-                    }
-                    break;
-
-                case 2:
-                    System.out.println("Ingrese el nombre del Entrenador que desea modificar:");
-                    String nombreEntrenador = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    System.out.println("¿Qué atributo desea modificar?");
-                    System.out.println("1. Nombre");
-                    System.out.println("2. Nacionalidad");
-                    System.out.println("3. Fecha de nacimiento");
-
-                    int opcionAtributoEntrenador = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    String nombreColumnaEntrenador = "";
-                    String nuevoValorEntrenador = "";
-
-                    switch (opcionAtributoEntrenador) {
-                        case 1:
-                            nombreColumnaEntrenador = "nombre";
-                            System.out.println("Ingrese el nuevo nombre del jugador:");
-                            nuevoValorEntrenador = scanner.nextLine();
-                            break;
-                        case 2:
-                            nombreColumnaEntrenador = "nacionalidad";
-                            System.out.println("Ingrese la nueva nacionalidad del jugador:");
-                            nuevoValorEntrenador = scanner.nextLine();
-                            break;
-                        case 3:
-                            nombreColumnaEntrenador = "fecha_nacimiento";
-                            System.out.println("Ingrese la nueva fecha de nacimiento del jugador (YYYY-MM-DD):");
-                            nuevoValorEntrenador = scanner.nextLine();
-                            break;
-                        default:
-                            System.out.println("Opción no válida");
-                            conn.close();
-                            return;
-                    }
-                    String sqlEntrenador = "UPDATE Entrenadores SET " + nombreColumnaEntrenador
-                            + " = ? WHERE nombre = ?";
-                    PreparedStatement statementEntrenador = conn.prepareStatement(sqlEntrenador);
-                    statementEntrenador.setString(1, nuevoValorEntrenador);
-                    statementEntrenador.setString(2, nombreEntrenador);
-
-                    int rowsUpdatedEntrenador = statementEntrenador.executeUpdate();
-                    if (rowsUpdatedEntrenador > 0) {
-                        System.out.println("Jugador modificado correctamente");
-                    } else {
-                        System.out.println("No se encontró el jugador con el ID especificado");
-                    }
-                    break;
-                case 3:
-                    System.out.println("Ingrese el nombre del Equipo que desea modificar:");
-                    String nombreEquipo = scanner.nextLine();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    System.out.println("¿Qué atributo desea modificar?");
-                    System.out.println("1. Nombre");
-                    System.out.println("2. Nacionalidad");
-                    System.out.println("3. Fecha de nacimiento");
-
-                    int opcionAtributoEquipo = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-
-                    String nombreColumnaEquipo = "";
-                    String nuevoValorEquipo = "";
-
-                    switch (opcionAtributoEquipo) {
-                        case 1:
-                            nombreColumnaEquipo = "nombre";
-                            System.out.println("Ingrese el nuevo nombre del Equipo:");
-                            nuevoValorEquipo = scanner.nextLine();
-                            break;
-                        case 2:
-                            nombreColumnaEquipo = "pais";
-                            System.out.println("Ingrese el nuevo pais del Equipo:");
-                            nuevoValorEquipo = scanner.nextLine();
-                            break;
-                        case 3:
-                            nombreColumnaEquipo = "fundación";
-                            System.out.println("Ingrese la nueva fecha de fundación del equipo (YYYY-MM-DD):");
-                            nuevoValorEquipo = scanner.nextLine();
-                            break;
-                        case 4:
-                            nombreColumnaEquipo = "estadio";
-                            System.out.println("Ingrese el nuevo nombre del estadio del equipo:");
-                            nuevoValorEquipo = scanner.nextLine();
-                            break;
-                        default:
-                            System.out.println("Opción no válida");
-                            conn.close();
-                            return;
-                    }
-                    String sqlEquipo = "UPDATE Entrenadores SET " + nombreColumnaEquipo + " = ? WHERE nombre = ?";
-                    PreparedStatement statementEquipo = conn.prepareStatement(sqlEquipo);
-                    statementEquipo.setString(1, nuevoValorEquipo);
-                    statementEquipo.setString(2, nombreEquipo);
-
-                    int rowsUpdatedEquipo = statementEquipo.executeUpdate();
-                    if (rowsUpdatedEquipo > 0) {
-                        System.out.println("Jugador modificado correctamente");
-                    } else {
-                        System.out.println("No se encontró el jugador con el ID especificado");
-                    }
-                    break;
-
-                default:
-                    System.out.println("Opción no válida");
-                    break;
+            // Verificar si se han borrado filas de la tabla Equipos
+            if (filasBorradasEquipo > 0) {
+                System.out.println("Se han borrado " + filasBorradasEquipo + " fila(s) de la tabla Equipos.");
             }
 
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error al borrar en la base de datos: " + e.getMessage());
         }
     }
+
 }

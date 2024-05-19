@@ -1,15 +1,56 @@
-public class Jugador extends Persona {
+public class Jugador {
+    private int id;
+    private String nombre;
+    private String nacionalidad;
+    private String fechaNacimiento;
     private String posicion;
-    private int equipoId;
+    private String equipo;
+    private String entrenadorId;
 
-    public Jugador(){
-
+    public Jugador(String nombre, String nacionalidad, String fechaNacimiento, String posicion, String equipo) {
+        this.nombre = nombre;
+        this.nacionalidad = nacionalidad;
+        this.fechaNacimiento = fechaNacimiento;
+        this.posicion = posicion;
+        this.equipo = equipo;
     }
 
-    public Jugador(String nombre, String nacionalidad, String fechaNacimiento, String posicion, int equipoId) {
-        super(nombre, nacionalidad, fechaNacimiento);
-        this.posicion = posicion;
-        this.equipoId = equipoId;
+    @Override
+    public String toString() {
+        return "Jugador [nombre=" + nombre + ", nacionalidad=" + nacionalidad + ", fechaNacimiento=" + fechaNacimiento
+                + ", posicion=" + posicion + ", equipo=" + equipo + "]";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getPosicion() {
@@ -20,13 +61,25 @@ public class Jugador extends Persona {
         this.posicion = posicion;
     }
 
-    public int getEquipoId() {
-        return equipoId;
+    public String getEquipo() {
+        return equipo;
     }
 
-    public void setEquipoId(int equipoId) {
-        this.equipoId = equipoId;
+    public void setEquipo(String equipo) {
+        this.equipo = equipo;
     }
+
+    public String getEntrenadorId() {
+        return entrenadorId;
+    }
+
+    public void setEntrenadorId(String entrenadorId) {
+        this.entrenadorId = entrenadorId;
+    }
+
+    
+
+    
 
     
 }
