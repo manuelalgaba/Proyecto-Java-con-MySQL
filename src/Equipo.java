@@ -26,19 +26,6 @@ public class Equipo {
                 + ", entrenador=" + entrenador + ", plantilla=" + plantilla + "]";
     }
 
-
-    public List<String> getPlantilla() {
-        return plantilla;
-    }
-
-    public void setPlantilla(List<String> plantilla) {
-        this.plantilla = plantilla;
-    }
-
-    public void agregarJugador(String jugador) {
-        plantilla.add(jugador);
-    }
-
     public int getId() {
         return id;
     }
@@ -87,5 +74,16 @@ public class Equipo {
         this.entrenador = entrenador;
     }
 
-    
+    public List<String> getPlantilla() {
+        return plantilla;
+    }
+
+    public void agregarJugador(String jugador) {
+        this.plantilla.add(jugador);
+    }
+
+    public void setPlantilla(List<String> plantilla) {
+        this.plantilla = plantilla;
+    }
+
 }
