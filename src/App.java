@@ -335,7 +335,6 @@ public class App {
                     System.out.println("¿Desea borrar también el entrenador y la plantilla del equipo? (Sí/No):");
                     String borrarEntrenadorYPlantilla = scanner.nextLine();
     
-                    // Primero, eliminamos el equipo
                     statement = conn.prepareStatement("DELETE FROM Equipos WHERE nombre = ?");
                     statement.setString(1, nombreEquipo);
                     filasBorradasEquipo = statement.executeUpdate(); // Actualizamos la variable con el número de filas
@@ -344,12 +343,10 @@ public class App {
                     // Si se confirma el borrado del entrenador y la plantilla, procedemos a
                     // eliminarlos
                     if (borrarEntrenadorYPlantilla.equalsIgnoreCase("Sí")) {
-                        // Borrar jugadores del equipo
                         statement = conn.prepareStatement("DELETE FROM Jugadores WHERE equipo_id = (SELECT ID_equipo FROM Equipos WHERE nombre = ?)");
                         statement.setString(1, nombreEquipo);
                         statement.executeUpdate();
     
-                        // Borrar entrenador del equipo
                         statement = conn.prepareStatement("DELETE FROM Entrenadores WHERE equipo_id = (SELECT ID_equipo FROM Equipos WHERE nombre = ?)");
                         statement.setString(1, nombreEquipo);
                         statement.executeUpdate();
@@ -387,7 +384,7 @@ public class App {
         System.out.println("3. Equipo");
     
         int opcion = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer
+        scanner.nextLine();
     
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Base_De_Datos_APP", "root",
@@ -459,7 +456,7 @@ public class App {
     }
     
     public static void verClasificación(Scanner scanner) {
-        System.out.println("Ingrese el ID del torneo que desea borrar:");
+        System.out.println("Ingrese el ID del torneo que desea ver su clasificación:");
         int idTorneo = scanner.nextInt();
         scanner.nextLine();
 

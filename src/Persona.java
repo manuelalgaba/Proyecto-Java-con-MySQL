@@ -9,7 +9,6 @@ public abstract class Persona {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // Método abstracto para obtener una descripción de la persona
     public abstract String getDescripcion();
 
 
