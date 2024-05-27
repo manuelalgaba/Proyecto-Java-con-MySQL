@@ -22,8 +22,8 @@ public class Equipo {
     
     @Override
     public String toString() {
-        return "Equipo [nombre=" + nombre + ", pais=" + pais + ", fundacion=" + fundacion + ", estadio=" + estadio
-                + ", entrenador=" + entrenador + ", plantilla=" + plantilla + "]";
+        return "Nombre = " + nombre + ", pais = " + pais + ", fundacion = " + fundacion + ", estadio  = " + estadio
+                + ", entrenador = " + entrenador + ", plantilla = " + plantilla;
     }
 
     public int getId() {

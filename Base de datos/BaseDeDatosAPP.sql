@@ -3,38 +3,49 @@ CREATE DATABASE Base_De_Datos_APP CHARSET utf8mb4;
 USE Base_De_Datos_APP;
 CREATE TABLE Entrenadores (
     ID_entrenador INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
+    nombre VARCHAR(100) NOT NULL,
     nacionalidad VARCHAR(50),
-    fecha_nacimiento DATE
+    fecha_nacimiento DATE,
+    email VARCHAR(100),
+    telefono VARCHAR(20),
+    UNIQUE (nombre)
 );
+
 CREATE TABLE Equipos (
     ID_equipo INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
+    nombre VARCHAR(100) NOT NULL,
     pais VARCHAR(50),
     fundacion DATE,
     estadio VARCHAR(100),
     entrenador_id INT,
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador)
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador),
+    INDEX (nombre)
 );
+
 CREATE TABLE Torneos (
     ID_torneo INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
+    nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     fecha_inicio DATE,
-    fecha_fin DATE
+    fecha_fin DATE,
+    UNIQUE (nombre)
 );
+
 CREATE TABLE Jugadores (
     ID_jugador INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
+    nombre VARCHAR(100) NOT NULL,
     nacionalidad VARCHAR(50),
     fecha_nacimiento DATE,
     posicion VARCHAR(50),
     equipo_id INT,
     entrenador_id INT,
     FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo),
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador)
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador),
+    INDEX (nombre)
 );
+
 CREATE TABLE Participacion_Y_Clasificacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     equipo_id INT,
     torneo_id INT,
     posicion INT,
@@ -43,10 +54,11 @@ CREATE TABLE Participacion_Y_Clasificacion (
     partidos_ganados INT,
     partidos_empatados INT,
     partidos_perdidos INT,
-    PRIMARY KEY (equipo_id, torneo_id),
     FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo),
-    FOREIGN KEY (torneo_id) REFERENCES Torneos(ID_torneo)
+    FOREIGN KEY (torneo_id) REFERENCES Torneos(ID_torneo),
+    INDEX (equipo_id, torneo_id)
 );
+
 INSERT INTO Entrenadores (ID_entrenador, nombre, nacionalidad, fecha_nacimiento) VALUES
 (1, 'Carlo Ancelotti', 'Italiana', '1959-06-10'),
 (2, 'Ronald Koeman', 'Neerlandesa', '1963-03-21'),

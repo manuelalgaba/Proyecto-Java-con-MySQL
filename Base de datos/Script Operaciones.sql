@@ -25,7 +25,7 @@ JOIN Torneos t ON pc.torneo_id = t.ID_torneo WHERE t.nombre = 'Premier League'
 AND pc.partidos_ganados > 0 GROUP BY e.nombre;
 
 /* Listar el nombre del equipo y la cantidad total de jugadores que tienen una fecha de nacimiento posterior al año 1995 */
-SELECT e.nombre AS nombre_equipo, COUNT(*) AS total_jugadores_post_2000
+SELECT e.nombre AS nombre_equipo, COUNT(*) AS total_jugadores_post_1995
 FROM Equipos e INNER JOIN Jugadores j ON e.ID_equipo = j.equipo_id
 WHERE YEAR(j.fecha_nacimiento) > 1995 GROUP BY e.nombre;
 
