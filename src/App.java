@@ -173,7 +173,7 @@ public class App {
         } catch (SQLException e) {
             System.out.println("Error al buscar en la base de datos: " + e.getMessage());
         }
-    }    
+    }
 
     public static void añadirEnBasedeDatos(Scanner scanner) {
         System.out.println("¿Qué desea agregar?");
