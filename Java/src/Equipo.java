@@ -1,5 +1,5 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Equipo {
     private int id;
@@ -10,16 +10,15 @@ public class Equipo {
     private String entrenador;
     private List<String> plantilla;
 
-    public Equipo(String nombre, String pais, String fundacion, String estadio, String entrenador, String plantilla) {
+    public Equipo(String nombre, String pais, String fundacion, String estadio, String entrenador) {
         this.nombre = nombre;
         this.pais = pais;
         this.fundacion = fundacion;
         this.estadio = estadio;
         this.entrenador = entrenador;
-        this.plantilla = new ArrayList<String>();
+        this.plantilla = new ArrayList<>();
     }
 
-    
     @Override
     public String toString() {
         return "Nombre = " + nombre + ", pais = " + pais + ", fundacion = " + fundacion + ", estadio  = " + estadio
@@ -85,5 +84,4 @@ public class Equipo {
     public void setPlantilla(List<String> plantilla) {
         this.plantilla = plantilla;
     }
-
 }

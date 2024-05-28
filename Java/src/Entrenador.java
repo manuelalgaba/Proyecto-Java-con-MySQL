@@ -1,3 +1,4 @@
+
 public class Entrenador extends Persona {
     private String equipo;
 
@@ -10,8 +11,6 @@ public class Entrenador extends Persona {
     public String getDescripcion() {
         return "Entrenador: Nombre=" + nombre + ", Equipo=" + equipo;
     }
-
-    
 
     @Override
     public String toString() {
@@ -26,5 +25,4 @@ public class Entrenador extends Persona {
     public void setEquipo(String equipo) {
         this.equipo = equipo;
     }
-    
 }

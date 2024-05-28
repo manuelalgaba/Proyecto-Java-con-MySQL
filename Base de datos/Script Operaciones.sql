@@ -45,15 +45,23 @@ WHERE posicion = 'Defensa';
 
 /* VISTAS */
 
-/* Vista que muestra los jugadores que tienen más de 30 años */
-CREATE VIEW Jugadores_Mayores_De_30 AS
-SELECT * FROM Jugadores WHERE TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) > 30;
+/* VIsta para el nombre de los equipos que han ganado al menos un partido la Premier League junto con el número total de partidos ganados */
+CREATE VIEW vista_total_partidos_ganados AS
+SELECT e.nombre, SUM(pc.partidos_ganados) AS total_partidos_ganados
+FROM Equipos e JOIN Participacion_Y_Clasificacion pc ON e.ID_equipo = pc.equipo_id
+JOIN Torneos t ON pc.torneo_id = t.ID_torneo 
+WHERE t.nombre = 'Premier League' AND pc.partidos_ganados > 0 
+GROUP BY e.nombre;
 
-/*  Vista que muestra los equipos con sus entrenadores y el número de jugadores que tienen */
-CREATE VIEW Equipos_Con_Entrenadores_Y_Jugadores AS SELECT Equipos.nombre, Entrenadores.nombre 
-AS nombre_entrenador, COUNT(Jugadores.ID_jugador) AS cantidad_jugadores
-FROM Equipos INNER JOIN Entrenadores ON Equipos.entrenador_id = Entrenadores.ID_entrenador
-LEFT JOIN Jugadores ON Equipos.ID_equipo = Jugadores.equipo_id GROUP BY Equipos.nombre;
+
+/* Vista para listar el nombre del equipo y la cantidad total de jugadores que tienen una fecha de nacimiento posterior al año 1995 */
+CREATE VIEW vista_total_jugadores_post_1995 AS
+SELECT e.nombre AS nombre_equipo, COUNT(*) AS total_jugadores_post_1995
+FROM Equipos e 
+INNER JOIN Jugadores j ON e.ID_equipo = j.equipo_id
+WHERE YEAR(j.fecha_nacimiento) > 1995 
+GROUP BY e.nombre;
+
 
 /* FUNCION Y PROCEDIMIENTO */
 
@@ -96,7 +104,7 @@ BEGIN
     DECLARE edad INT;
     SET edad = TIMESTAMPDIFF(YEAR, NEW.fecha_nacimiento, CURDATE());
     IF edad < 16 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El jugador debe ser mayor de 18 años';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El jugador debe ser mayor de 16 años';
     END IF;
 END $$
 DELIMITER ;

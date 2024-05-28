@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS Base_De_Datos_APP;
-CREATE DATABASE Base_De_Datos_APP CHARSET utf8mb4;
+CREATE DATABASE Base_De_Datos_APP CHARACTER SET utf8mb4;
 USE Base_De_Datos_APP;
+
 CREATE TABLE Entrenadores (
     ID_entrenador INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -18,8 +19,8 @@ CREATE TABLE Equipos (
     fundacion DATE,
     estadio VARCHAR(100),
     entrenador_id INT,
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador),
-    INDEX (nombre)
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE CASCADE,
+    INDEX nombre_index (nombre)
 );
 
 CREATE TABLE Torneos (
@@ -39,9 +40,9 @@ CREATE TABLE Jugadores (
     posicion VARCHAR(50),
     equipo_id INT,
     entrenador_id INT,
-    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo),
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador),
-    INDEX (nombre)
+    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo) ON DELETE CASCADE,
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE CASCADE,
+    INDEX nombre_index (nombre)
 );
 
 CREATE TABLE Participacion_Y_Clasificacion (
@@ -54,9 +55,9 @@ CREATE TABLE Participacion_Y_Clasificacion (
     partidos_ganados INT,
     partidos_empatados INT,
     partidos_perdidos INT,
-    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo),
-    FOREIGN KEY (torneo_id) REFERENCES Torneos(ID_torneo),
-    INDEX (equipo_id, torneo_id)
+    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo) ON DELETE CASCADE,
+    FOREIGN KEY (torneo_id) REFERENCES Torneos(ID_torneo) ON DELETE CASCADE,
+    INDEX equipo_torneo_index (equipo_id, torneo_id)
 );
 
 INSERT INTO Entrenadores (ID_entrenador, nombre, nacionalidad, fecha_nacimiento) VALUES
@@ -346,3 +347,4 @@ INSERT INTO Participacion_Y_Clasificacion (equipo_id, torneo_id, posicion, punto
     (18, 2, 8, 70, 38, 20, 10, 8), -- Manchester United
     (19, 2, 9, 67, 38, 19, 10, 9), -- Tottenham Hotspur
     (20, 2, 10, 65, 38, 18, 11, 9); -- Fulham
+

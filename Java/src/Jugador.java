@@ -13,34 +13,22 @@ public class Jugador extends Persona {
         return "Jugador: Nombre=" + nombre + ", Posición=" + posicion + ", Equipo=" + equipo;
     }
 
-    
-
-
-
-
     @Override
     public String toString() {
-        return "Nombre = " + nombre + ", posicion = " + posicion + ", nacionalidad = " + nacionalidad + ", equipo = "
-                + equipo + ", fechaNacimiento = " + fechaNacimiento;
+        return "Nombre = " + nombre + ", posicion = " + posicion + ", nacionalidad = " + nacionalidad + ", equipo = " + equipo + ", fechaNacimiento = " + fechaNacimiento;
     }
 
     public String getPosicion() {
         return posicion;
     }
 
-
-
     public void setPosicion(String posicion) {
         this.posicion = posicion;
     }
 
-
-
     public String getEquipo() {
         return equipo;
     }
-
-
 
     public void setEquipo(String equipo) {
         this.equipo = equipo;
