@@ -19,7 +19,7 @@ CREATE TABLE Equipos (
     fundacion DATE,
     estadio VARCHAR(100),
     entrenador_id INT,
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE CASCADE,
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE SET NULL,
     INDEX nombre_index (nombre)
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE Jugadores (
     posicion VARCHAR(50),
     equipo_id INT,
     entrenador_id INT,
-    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo) ON DELETE CASCADE,
-    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE CASCADE,
+    FOREIGN KEY (equipo_id) REFERENCES Equipos(ID_equipo) ON DELETE SET NULL,
+    FOREIGN KEY (entrenador_id) REFERENCES Entrenadores(ID_entrenador) ON DELETE SET NULL,
     INDEX nombre_index (nombre)
 );
 
@@ -60,27 +60,27 @@ CREATE TABLE Participacion_Y_Clasificacion (
     INDEX equipo_torneo_index (equipo_id, torneo_id)
 );
 
-INSERT INTO Entrenadores (ID_entrenador, nombre, nacionalidad, fecha_nacimiento) VALUES
-(1, 'Carlo Ancelotti', 'Italiana', '1959-06-10'),
-(2, 'Ronald Koeman', 'Neerlandesa', '1963-03-21'),
-(3, 'Diego Simeone', 'Argentina', '1970-04-28'),
-(4, 'Julen Lopetegui', 'Española', '1966-08-28'),
-(5, 'Imanol Alguacil', 'Española', '1971-01-01'),
-(6, 'Unai Emery', 'Española', '1971-11-03'),
-(7, 'Manuel Pellegrini', 'Chilena', '1953-09-16'),
-(8, 'Eduardo Coudet', 'Argentina', '1974-09-12'),
-(9, 'Marcelino García Toral', 'Española', '1965-08-14'),
-(10, 'Javi Gracia', 'Española', '1970-05-01'),
-(11, 'Mikel Arteta', 'Española', '1982-03-26'),
-(12, 'Steven Gerrard', 'Inglesa', '1980-05-30'),
-(13, 'Sean Dyche', 'Inglesa', '1971-06-28'),
-(14, 'Thomas Tuchel', 'Alemana', '1973-08-29'),
-(15, 'Rafael Benítez', 'Española', '1960-04-16'),
-(16, 'Jürgen Klopp', 'Alemana', '1967-06-16'),
-(17, 'Pep Guardiola', 'Española', '1971-01-18'),
-(18, 'Ole Gunnar Solskjaer', 'Noruega', '1973-02-26'),
-(19, 'Nuno Espírito Santo', 'Portuguesa', '1974-01-25'),
-(20, 'David Moyes', 'Escocesa', '1963-04-25');
+INSERT INTO Entrenadores (ID_entrenador, nombre, nacionalidad, fecha_nacimiento, email, telefono) VALUES
+(1, 'Carlo Ancelotti', 'Italiana', '1959-06-10', 'carlo_ancelotti@example.com', '+1234567890'),
+(2, 'Ronald Koeman', 'Neerlandesa', '1963-03-21', 'ronald_koeman@example.com', '+1987654321'),
+(3, 'Diego Simeone', 'Argentina', '1970-04-28', 'diego_simeone@example.com', '+1765432109'),
+(4, 'Julen Lopetegui', 'Española', '1966-08-28', 'julen_lopetegui@example.com', '+1654321098'),
+(5, 'Imanol Alguacil', 'Española', '1971-01-01', 'imanol_alguacil@example.com', '+1543210987'),
+(6, 'Unai Emery', 'Española', '1971-11-03', 'unai_emery@example.com', '+1432109876'),
+(7, 'Manuel Pellegrini', 'Chilena', '1953-09-16', 'manuel_pellegrini@example.com', '+1321098765'),
+(8, 'Eduardo Coudet', 'Argentina', '1974-09-12', 'eduardo_coudet@example.com', '+1210987654'),
+(9, 'Marcelino García Toral', 'Española', '1965-08-14', 'marcelino_garcia@example.com', '+1109876543'),
+(10, 'Javi Gracia', 'Española', '1970-05-01', 'javi_gracia@example.com', '+1098765432'),
+(11, 'Mikel Arteta', 'Española', '1982-03-26', 'mikel_arteta@example.com', '+1098765432'),
+(12, 'Steven Gerrard', 'Inglesa', '1980-05-30', 'steven_gerrard@example.com', '+1109876543'),
+(13, 'Sean Dyche', 'Inglesa', '1971-06-28', 'sean_dyche@example.com', '+1210987654'),
+(14, 'Thomas Tuchel', 'Alemana', '1973-08-29', 'thomas_tuchel@example.com', '+1321098765'),
+(15, 'Rafael Benítez', 'Española', '1960-04-16', 'rafael_benitez@example.com', '+1432109876'),
+(16, 'Jürgen Klopp', 'Alemana', '1967-06-16', 'jurgen_klopp@example.com', '+1543210987'),
+(17, 'Pep Guardiola', 'Española', '1971-01-18', 'pep_guardiola@example.com', '+1654321098'),
+(18, 'Ole Gunnar Solskjaer', 'Noruega', '1973-02-26', 'ole_solskjaer@example.com', '+1765432109'),
+(19, 'Nuno Espírito Santo', 'Portuguesa', '1974-01-25', 'nuno_santo@example.com', '+1987654321'),
+(20, 'David Moyes', 'Escocesa', '1963-04-25', 'david_moyes@example.com', '+1234567890');
 INSERT INTO Equipos (ID_equipo, nombre, pais, fundacion, estadio, entrenador_id) VALUES
 (1, 'Real Madrid', 'España', '1902-03-06', 'Santiago Bernabéu', 1),
 (2, 'Barcelona', 'España', '1899-11-29', 'Camp Nou', 2),
