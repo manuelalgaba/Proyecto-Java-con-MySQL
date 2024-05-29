@@ -81,7 +81,7 @@ public class App {
         System.out.println("3. Equipo");
 
         int opcion = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
 
         System.out.println("Ingrese el nombre:");
         String nombre = scanner.nextLine();
@@ -384,12 +384,12 @@ public class App {
         return -1; // Retorna -1 si el entrenador no fue encontrado
     }
 
-    // Método para 
-/**
- * Borra una entidad en la base de datos.
- * 
- * @param scanner El escáner para la entrada del usuario
- */
+    // Método para
+    /**
+     * Borra una entidad en la base de datos.
+     * 
+     * @param scanner El escáner para la entrada del usuario
+     */
     public static void borrar(Scanner scanner) {
         System.out.println("Seleccione la entidad a borrar:");
         System.out.println("1. Entrenador");
@@ -417,10 +417,10 @@ public class App {
 
     // Métodos para borrar entidades
     /**
- * Borra un entrenador en la base de datos.
- * 
- * @param nombre Nombre del entrenador
- */
+     * Borra un entrenador en la base de datos.
+     * 
+     * @param nombre Nombre del entrenador
+     */
     private static void borrarEntrenador(Scanner scanner) {
         System.out.println("Ingrese el nombre del entrenador:");
         String nombre = scanner.nextLine();
@@ -441,11 +441,12 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-/**
- * Borra un jugador en la base de datos.
- * 
- * @param nombre Nombre del jugador
- */
+
+    /**
+     * Borra un jugador en la base de datos.
+     * 
+     * @param nombre Nombre del jugador
+     */
     private static void borrarJugador(Scanner scanner) {
         System.out.println("Ingrese el nombre del jugador:");
         String nombre = scanner.nextLine();
@@ -481,11 +482,12 @@ public class App {
         }
         return -1; // Retorna -1 si el jugador no fue encontrado
     }
-/**
- * Borra un equipo en la base de datos.
- * 
- * @param nombre Nombre del equipo
- */
+
+    /**
+     * Borra un equipo en la base de datos.
+     * 
+     * @param nombre Nombre del equipo
+     */
     private static void borrarEquipo(Scanner scanner) {
         System.out.println("Ingrese el nombre del equipo:");
         String nombre = scanner.nextLine();
@@ -580,12 +582,13 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-/**
- * Modifica un jugador en la base de datos.
- * 
- * @param nombreOriginal Nombre original del jugador
- * @param scanner        El escáner para la entrada del usuario
- */
+
+    /**
+     * Modifica un jugador en la base de datos.
+     * 
+     * @param nombreOriginal Nombre original del jugador
+     * @param scanner        El escáner para la entrada del usuario
+     */
     private static void modificarJugador(Scanner scanner) {
         System.out.println("Ingrese el nombre del jugador a modificar:");
         String nombreOriginal = scanner.nextLine();
@@ -639,12 +642,13 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-/**
- * Modifica un equipo en la base de datos.
- * 
- * @param nombreOriginal Nombre original del equipo
- * @param scanner        El escáner para la entrada del usuario
- */
+
+    /**
+     * Modifica un equipo en la base de datos.
+     * 
+     * @param nombreOriginal Nombre original del equipo
+     * @param scanner        El escáner para la entrada del usuario
+     */
     private static void modificarEquipo(Scanner scanner) {
         System.out.println("Ingrese el nombre del equipo a modificar:");
         String nombreOriginal = scanner.nextLine();
@@ -689,11 +693,12 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-/**
- * Borra un equipo en la base de datos.
- * 
- * @param nombre Nombre del equipo
- */
+
+    /**
+     * Borra un equipo en la base de datos.
+     * 
+     * @param nombre Nombre del equipo
+     */
     public static void verClasificación(Scanner scanner) {
         System.out.println("Ingrese el nombre del torneo que desea ver su clasificación:");
         String nombreTorneo = scanner.nextLine();
@@ -751,11 +756,12 @@ public class App {
         }
         return -1; // Retorna -1 si el torneo no fue encontrado
     }
-/**
- * Muestra la plantilla ordenada de un equipo.
- * 
- * @param scanner El escáner para la entrada del usuario
- */
+
+    /**
+     * Muestra la plantilla ordenada de un equipo.
+     * 
+     * @param scanner El escáner para la entrada del usuario
+     */
     public static void verPlantillaOrdenada(Scanner scanner) {
         System.out.println("Ingrese el nombre del equipo:");
         String nombreEquipo = scanner.nextLine();
@@ -848,11 +854,12 @@ public class App {
         }
         return jugadores;
     }
-/**
- * Crea un nuevo torneo en la base de datos.
- * 
- * @param scanner El escáner para la entrada del usuario
- */
+
+    /**
+     * Crea un nuevo torneo en la base de datos.
+     * 
+     * @param scanner El escáner para la entrada del usuario
+     */
     public static void crearTorneo(Scanner scanner) {
         System.out.println("Ingrese el nombre del torneo:");
         String nombreTorneo = scanner.nextLine();
@@ -885,12 +892,13 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
-/**
- * Agrega equipos a un torneo en la base de datos.
- * 
- * @param scanner  El escáner para la entrada del usuario
- * @param torneoId El ID del torneo
- */
+
+    /**
+     * Agrega equipos a un torneo en la base de datos.
+     * 
+     * @param scanner  El escáner para la entrada del usuario
+     * @param torneoId El ID del torneo
+     */
     public static void agregarEquiposATorneo(Scanner scanner, int torneoId) {
         List<Integer> equipoIds = new ArrayList<>();
         while (true) {
@@ -916,12 +924,14 @@ public class App {
 
         generarClasificacionAleatoria(torneoId, equipoIds);
     }
-/**
- * Genera una clasificación aleatoria para un torneo y la guarda en la base de datos.
- * 
- * @param torneoId  El ID del torneo
- * @param equipoIds La lista de IDs de los equipos
- */
+
+    /**
+     * Genera una clasificación aleatoria para un torneo y la guarda en la base de
+     * datos.
+     * 
+     * @param torneoId  El ID del torneo
+     * @param equipoIds La lista de IDs de los equipos
+     */
     public static void generarClasificacionAleatoria(int torneoId, List<Integer> equipoIds) {
         Random rand = new Random();
         List<Clasificacion> clasificaciones = new ArrayList<>();
