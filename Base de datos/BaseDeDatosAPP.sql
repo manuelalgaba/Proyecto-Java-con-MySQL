@@ -348,3 +348,12 @@ INSERT INTO Participacion_Y_Clasificacion (equipo_id, torneo_id, posicion, punto
     (19, 2, 9, 67, 38, 19, 10, 9), -- Tottenham Hotspur
     (20, 2, 10, 65, 38, 18, 11, 9); -- Fulham
 
+/* Ver nombre de los jugadores de x equipo/*
+/* SELECT J.nombre AS Jugador, J.nacionalidad, J.fecha_nacimiento, J.posicion 
+FROM Jugadores J
+INNER JOIN Equipos E ON J.equipo_id = E.ID_equipo
+WHERE E.nombre = 'Sevilla';
+
+/* SELECT nombre, nacionalidad FROM Entrenadores; */
+
+
