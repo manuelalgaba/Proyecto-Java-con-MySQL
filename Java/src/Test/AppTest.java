@@ -24,8 +24,8 @@ public class AppTest {
     }
 
     @AfterEach
-    public void tearDown() throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement("DROP TABLE IF EXISTS Equipos")) {
+    public void Borrar() throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement("Borrar tabala si existe Equipos")) {
             stmt.execute();
         }
         conn.close();
