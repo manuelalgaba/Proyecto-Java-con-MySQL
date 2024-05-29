@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/Base_De_Datos_APP";
     private static final String USER = "root";
-    private static final String PASSWORD = "123456789";
+    private static final String PASSWORD = "root";
 
     /**
      * Obtiene una conexión a la base de datos.
