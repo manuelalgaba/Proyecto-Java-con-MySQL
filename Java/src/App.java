@@ -6,13 +6,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Clase principal para la gestión de una aplicación de fútbol.
+ * Clase principal para la gestion de una aplicacion de fútbol.
  */
 public class App {
     /**
      * Metodo principal para iniciar la aplicación.
      *
-     * @param args Argumentos de la línea de comandos.
+     * @param args Argumentos de la linea de comandos.
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -40,7 +40,7 @@ public class App {
                     buscar(scanner);
                     break;
                 case 2:
-                    añadir(scanner);
+                    agregar(scanner);
                     break;
                 case 3:
                     borrar(scanner);
@@ -49,7 +49,7 @@ public class App {
                     modificar(scanner);
                     break;
                 case 5:
-                    verClasificación(scanner);
+                    verClasificacion(scanner);
                     break;
                 case 6:
                     verPlantillaOrdenada(scanner);
@@ -67,13 +67,13 @@ public class App {
         scanner.close();
     }
 
-    // Métodos de búsqueda
+    // Metodos de busqueda
     /**
      * Busca una entidad en la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
-    // Método para buscar
+    // Metodo para buscar
     public static void buscar(Scanner scanner) {
         System.out.println("Seleccione la entidad a buscar:");
         System.out.println("1. Entrenador");
@@ -106,7 +106,7 @@ public class App {
      * 
      * @param nombre Nombre del entrenador
      */
-    // Métodos para buscar entidades
+    // Metodos para buscar entidades
     private static void buscarEntrenador(String nombre) {
         String sql = "SELECT t.*, e.nombre AS equipo_nombre " +
                 "FROM Entrenadores t " +
@@ -196,13 +196,13 @@ public class App {
         }
     }
 
-    // Método para aniadir
+    // Metodo para aniadir
     /**
      * Aniade una nueva entidad a la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
-    public static void añadir(Scanner scanner) {
+    public static void agregar(Scanner scanner) {
         System.out.println("Seleccione la entidad a añadir:");
         System.out.println("1. Entrenador");
         System.out.println("2. Jugador");
@@ -213,26 +213,26 @@ public class App {
 
         switch (opcion) {
             case 1:
-                añadirEntrenador(scanner);
+                agregarEntrenador(scanner);
                 break;
             case 2:
-                añadirJugador(scanner);
+                agregarJugador(scanner);
                 break;
             case 3:
-                añadirEquipo(scanner);
+                agregarEquipo(scanner);
                 break;
             default:
                 System.out.println("Opción no válida");
         }
     }
 
-    // Métodos para aniadir entidades
+    // Metodos para aniadir entidades
     /**
      * Aniade un nuevo entrenador a la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
-    private static void añadirEntrenador(Scanner scanner) {
+    private static void agregarEntrenador(Scanner scanner) {
         System.out.println("Ingrese nombre:");
         String nombre = scanner.nextLine();
         System.out.println("Ingrese nacionalidad:");
@@ -262,9 +262,9 @@ public class App {
     /**
      * Aniade un nuevo jugador a la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
-    private static void añadirJugador(Scanner scanner) {
+    private static void agregarJugador(Scanner scanner) {
         System.out.println("Ingrese nombre:");
         String nombre = scanner.nextLine();
         System.out.println("Ingrese nacionalidad:");
@@ -309,9 +309,9 @@ public class App {
     }
 
     /**
-     * Añade un nuevo equipo a la base de datos.
+     * Aniade un nuevo equipo a la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
     private static int obtenerIdEquipoPorNombre(String nombre) {
         String sql = "SELECT ID_equipo FROM Equipos WHERE nombre = ?";
@@ -327,8 +327,12 @@ public class App {
         }
         return -1; // Retorna -1 si el equipo no fue encontrado
     }
-
-    private static void añadirEquipo(Scanner scanner) {
+/**
+     * Aniade un nuevo equipo a la base de datos.
+     * 
+     * @param scanner El escaner para la entrada del usuario
+     */
+    private static void agregarEquipo(Scanner scanner) {
         System.out.println("Ingrese nombre del equipo:");
         String nombre = scanner.nextLine();
         System.out.println("Ingrese país:");
@@ -384,11 +388,10 @@ public class App {
         return -1; // Retorna -1 si el entrenador no fue encontrado
     }
 
-    // Método para
     /**
      * Borra una entidad en la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
     public static void borrar(Scanner scanner) {
         System.out.println("Seleccione la entidad a borrar:");
@@ -415,7 +418,7 @@ public class App {
         }
     }
 
-    // Métodos para borrar entidades
+    // Metodos para borrar entidades
     /**
      * Borra un entrenador en la base de datos.
      * 
@@ -509,11 +512,11 @@ public class App {
         }
     }
 
-    // Métodos de modificación
+    // Metodos de modificación
     /**
      * Modifica una entidad en la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
     public static void modificar(Scanner scanner) {
         System.out.println("Seleccione la entidad a modificar:");
@@ -539,12 +542,12 @@ public class App {
         }
     }
 
-    // Métodos para modificar entidades
+    // Metodos para modificar entidades
     /**
      * Modifica un entrenador en la base de datos.
      * 
      * @param nombreOriginal Nombre original del entrenador
-     * @param scanner        El escáner para la entrada del usuario
+     * @param scanner        El escaner para la entrada del usuario
      */
     private static void modificarEntrenador(Scanner scanner) {
         System.out.println("Ingrese el nombre del entrenador a modificar:");
@@ -587,7 +590,7 @@ public class App {
      * Modifica un jugador en la base de datos.
      * 
      * @param nombreOriginal Nombre original del jugador
-     * @param scanner        El escáner para la entrada del usuario
+     * @param scanner        El escaner para la entrada del usuario
      */
     private static void modificarJugador(Scanner scanner) {
         System.out.println("Ingrese el nombre del jugador a modificar:");
@@ -647,7 +650,7 @@ public class App {
      * Modifica un equipo en la base de datos.
      * 
      * @param nombreOriginal Nombre original del equipo
-     * @param scanner        El escáner para la entrada del usuario
+     * @param scanner        El escaner para la entrada del usuario
      */
     private static void modificarEquipo(Scanner scanner) {
         System.out.println("Ingrese el nombre del equipo a modificar:");
@@ -695,11 +698,11 @@ public class App {
     }
 
     /**
-     * Borra un equipo en la base de datos.
+     * Muestra la clasificacion
      * 
-     * @param nombre Nombre del equipo
+     * @param scanner Un objeto {@link Scanner} para la entrada de datos del usuario.
      */
-    public static void verClasificación(Scanner scanner) {
+    public static void verClasificacion(Scanner scanner) {
         System.out.println("Ingrese el nombre del torneo que desea ver su clasificación:");
         String nombreTorneo = scanner.nextLine();
 
@@ -760,7 +763,7 @@ public class App {
     /**
      * Muestra la plantilla ordenada de un equipo.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
     public static void verPlantillaOrdenada(Scanner scanner) {
         System.out.println("Ingrese el nombre del equipo:");
@@ -858,7 +861,7 @@ public class App {
     /**
      * Crea un nuevo torneo en la base de datos.
      * 
-     * @param scanner El escáner para la entrada del usuario
+     * @param scanner El escaner para la entrada del usuario
      */
     public static void crearTorneo(Scanner scanner) {
         System.out.println("Ingrese el nombre del torneo:");
@@ -896,7 +899,7 @@ public class App {
     /**
      * Agrega equipos a un torneo en la base de datos.
      * 
-     * @param scanner  El escáner para la entrada del usuario
+     * @param scanner  El escaner para la entrada del usuario
      * @param torneoId El ID del torneo
      */
     public static void agregarEquiposATorneo(Scanner scanner, int torneoId) {
@@ -926,7 +929,7 @@ public class App {
     }
 
     /**
-     * Genera una clasificación aleatoria para un torneo y la guarda en la base de
+     * Genera una clasificacion aleatoria para un torneo y la guarda en la base de
      * datos.
      * 
      * @param torneoId  El ID del torneo
